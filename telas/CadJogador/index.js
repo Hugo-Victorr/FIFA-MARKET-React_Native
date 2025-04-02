@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { View, ScrollView, StyleSheet, Alert, ImageBackground } from 'react-native';
-import { TextInput, Button, Title } from 'react-native-paper';
+import { TextInput, Button, Title, useTheme } from 'react-native-paper';
 import JogadorService from '../../Database/JogadorService';
 import PosicaoService from '../../Database/PosicaoService';
 import DropDownPicker from 'react-native-dropdown-picker';
 
 export default function CadJogador({ route, navigation }) {
+  const { colors } = useTheme();
   const editar = route.params?.editar || false;
   const jogadorEdicao = route.params?.jogador;
 
@@ -23,9 +24,22 @@ export default function CadJogador({ route, navigation }) {
   const [open, setOpen] = useState(false);
   const [items, setItems] = useState([]);
 
+  // Tema personalizado para os TextInput
+  const inputTheme = {
+    colors: {
+      primary: '#0096FF', // cor da borda quando focada
+      background: 'rgba(20, 50, 90, 0.7)', // fundo do input
+      text: '#FFFFFF', // cor do texto digitado (branco)
+      placeholder: '#AAAAAA', // cor do placeholder
+      surface: 'rgba(20, 50, 90, 0.7)', // cor de fundo
+      accent: '#0096FF', // cor de destaque
+      onSurface: '#FFFFFF' // cor do texto
+    },
+    roundness: 4
+  };
+
   useEffect(() => {
     const carregar = async () => {
-      await JogadorService.init();
       await JogadorService.getJogadores(); 
       const posicoes = await PosicaoService.getAll();
       const formatado = posicoes.map(p => ({ label: p.nome, value: p.nome }));
@@ -106,7 +120,7 @@ export default function CadJogador({ route, navigation }) {
             label="NOME" 
             value={nome} 
             onChangeText={setNome} 
-            style={styles.input} 
+            style={[styles.input, { color: '#FFFFFF' }]} 
             mode="outlined"
             theme={inputTheme}
           />
@@ -115,7 +129,7 @@ export default function CadJogador({ route, navigation }) {
             label="IDADE" 
             value={idade} 
             onChangeText={setIdade} 
-            style={styles.input} 
+            style={[styles.input, { color: '#FFFFFF' }]} 
             keyboardType="numeric" 
             mode="outlined"
             theme={inputTheme}
@@ -141,7 +155,7 @@ export default function CadJogador({ route, navigation }) {
             label="RITMO" 
             value={ritmo} 
             onChangeText={setRitmo} 
-            style={styles.input} 
+            style={[styles.input, { color: '#FFFFFF' }]} 
             keyboardType="numeric" 
             mode="outlined"
             theme={inputTheme}
@@ -151,7 +165,7 @@ export default function CadJogador({ route, navigation }) {
             label="FINALIZAÇÃO" 
             value={finalizacao} 
             onChangeText={setFinalizacao} 
-            style={styles.input} 
+            style={[styles.input, { color: '#FFFFFF' }]} 
             keyboardType="numeric" 
             mode="outlined"
             theme={inputTheme}
@@ -161,7 +175,7 @@ export default function CadJogador({ route, navigation }) {
             label="PASSE" 
             value={passe} 
             onChangeText={setPasse} 
-            style={styles.input} 
+            style={[styles.input, { color: '#FFFFFF' }]} 
             keyboardType="numeric" 
             mode="outlined"
             theme={inputTheme}
@@ -171,7 +185,7 @@ export default function CadJogador({ route, navigation }) {
             label="CONDUÇÃO" 
             value={conducao} 
             onChangeText={setConducao} 
-            style={styles.input} 
+            style={[styles.input, { color: '#FFFFFF' }]} 
             keyboardType="numeric" 
             mode="outlined"
             theme={inputTheme}
@@ -181,7 +195,7 @@ export default function CadJogador({ route, navigation }) {
             label="DEFESA" 
             value={defesa} 
             onChangeText={setDefesa} 
-            style={styles.input} 
+            style={[styles.input, { color: '#FFFFFF' }]} 
             keyboardType="numeric" 
             mode="outlined"
             theme={inputTheme}
@@ -191,7 +205,7 @@ export default function CadJogador({ route, navigation }) {
             label="FÍSICO" 
             value={fisico} 
             onChangeText={setFisico} 
-            style={styles.input} 
+            style={[styles.input, { color: '#FFFFFF' }]} 
             keyboardType="numeric" 
             mode="outlined"
             theme={inputTheme}
@@ -201,7 +215,7 @@ export default function CadJogador({ route, navigation }) {
             label="PREÇO (R$)" 
             value={preco} 
             onChangeText={setPreco} 
-            style={styles.input} 
+            style={[styles.input, { color: '#FFFFFF' }]} 
             keyboardType="numeric" 
             mode="outlined"
             theme={inputTheme}
@@ -220,18 +234,6 @@ export default function CadJogador({ route, navigation }) {
     </ImageBackground>
   );
 }
-
-const inputTheme = {
-  colors: {
-    primary: '#0096FF',
-    background: 'rgba(20, 50, 90, 0.7)',
-    text: '#FFFFFF',
-    placeholder: '#AAAAAA',
-    surface: 'rgba(20, 50, 90, 0.7)',
-    accent: '#0096FF',
-  },
-  roundness: 4,
-};
 
 const styles = StyleSheet.create({
   backgroundImage: {
@@ -262,9 +264,8 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(0, 150, 255, 0.3)',
   },
   input: {
-    marginBottom: 15,
     backgroundColor: 'rgba(20, 50, 90, 0.7)',
-    borderRadius: 4,
+    marginBottom: 15,
   },
   dropdown: {
     borderColor: '#0096FF',

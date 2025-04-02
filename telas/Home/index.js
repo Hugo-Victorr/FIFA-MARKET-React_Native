@@ -4,6 +4,7 @@ import { Text, Title } from 'react-native-paper';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
 import { Audio } from 'expo-av';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import DatabaseService from '../../Database/DatabaseService';
 
 // Variável global para controlar o estado da música
 let globalSound = null;
@@ -13,6 +14,10 @@ export default function Home() {
   const navigation = useNavigation();
   const isFocused = useIsFocused();
   const [musicState, setMusicState] = useState(false);
+
+  useEffect(() => {
+      DatabaseService.init();
+    }, []);
 
   const menuItems = [
     { 
@@ -81,7 +86,7 @@ export default function Home() {
   // Efeito para carregar a música apenas na primeira montagem
   useEffect(() => {
     if (isFocused) {
-      loadBackgroundMusic();
+      //loadBackgroundMusic();
     }
 
     return () => {

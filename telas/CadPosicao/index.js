@@ -9,9 +9,21 @@ export default function CadPosicao({ route, navigation }) {
 
   const [nome, setNome] = useState('');
 
+  const inputTheme = {
+    colors: {
+      primary: '#0096FF', // cor da borda quando focada
+      background: 'rgba(20, 50, 90, 0.7)', // fundo do input
+      text: '#FFFFFF', // cor do texto digitado (branco)
+      placeholder: '#AAAAAA', // cor do placeholder
+      surface: 'rgba(20, 50, 90, 0.7)', // cor de fundo
+      accent: '#0096FF', // cor de destaque
+      onSurface: '#FFFFFF' // cor do texto
+    },
+    roundness: 4
+  };
+
   useEffect(() => {
     const carregar = async () => {
-      await PosicaoService.init();
       await PosicaoService.getAll(); 
     };
     carregar();
@@ -71,19 +83,9 @@ export default function CadPosicao({ route, navigation }) {
             label="NOME DA POSIÇÃO"
             value={nome}
             onChangeText={setNome}
-            style={styles.input}
+            style={[styles.input, { color: '#FFFFFF' }]} 
             mode="outlined"
-            theme={{
-              colors: {
-                primary: '#0096FF',
-                background: 'rgba(20, 50, 90, 0.7)',
-                text: '#FFFFFF',
-                placeholder: '#AAAAAA',
-                surface: 'rgba(20, 50, 90, 0.7)',
-                accent: '#0096FF',
-              },
-              roundness: 4,
-            }}
+            theme={inputTheme}
           />
 
           <Button 
@@ -129,8 +131,8 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(0, 150, 255, 0.3)',
   },
   input: {
-    marginBottom: 20,
     backgroundColor: 'rgba(20, 50, 90, 0.7)',
+    marginBottom: 15,
   },
   backButton: {
     backgroundColor: '#0096FF',

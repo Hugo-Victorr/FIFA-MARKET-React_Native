@@ -18,8 +18,6 @@ export default function ListaVenda({ navigation }) {
     const carregar = async () => {
       //await VendaService.deleteTable();
       //await VendaItemService.deleteTable();
-      await VendaService.init();
-      await VendaItemService.init();
       const listaPosicoes = await PosicaoService.getAll();
       const formatado = [
         { label: 'TODAS AS POSIÇÕES', value: null }, 

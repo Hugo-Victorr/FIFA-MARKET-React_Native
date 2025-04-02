@@ -1,7 +1,7 @@
 import * as SQLite from 'expo-sqlite';
+import DatabaseService from './DatabaseService';
 
 const JogadorService = {
-  init,
   insert,
   update,
   getJogadores,
@@ -14,44 +14,45 @@ const JogadorService = {
 
 export default JogadorService;
 
-async function init() { 
-  console.log('entrou no init');
-  const db = await SQLite.openDatabaseAsync('N2_AlbumJogadores'); 
+// async function init() { 
+//   console.log('entrou no init');
+//   const db = await SQLite.openDatabaseAsync('N2_AlbumJogadores'); 
   
-  // precisa ser execAsync
-  await db.execAsync(`  
-    PRAGMA journal_mode = WAL;
-        CREATE TABLE IF NOT EXISTS jogadores (
-          id INTEGER PRIMARY KEY AUTOINCREMENT, 
-          nome TEXT,
-          idade INTEGER,
-          posicao TEXT,
-          ritmo INTEGER, 
-          finalizacao INTEGER,
-          passe INTEGER, 
-          conducao INTEGER,
-          defesa INTEGER,
-          fisico INTEGER,
-          preco REAL
-        );
-      `,
-   );
+//   // precisa ser execAsync
+//   await db.execAsync(`  
+//     PRAGMA journal_mode = WAL;
+//         CREATE TABLE IF NOT EXISTS jogadores (
+//           id INTEGER PRIMARY KEY AUTOINCREMENT, 
+//           nome TEXT,
+//           idade INTEGER,
+//           posicao TEXT,
+//           ritmo INTEGER, 
+//           finalizacao INTEGER,
+//           passe INTEGER, 
+//           conducao INTEGER,
+//           defesa INTEGER,
+//           fisico INTEGER,
+//           preco REAL
+//         );
+//       `,
+//    );
 
-  // await db.execAsync(`
-  //   PRAGMA journal_mode = WAL;
-  //       CREATE TABLE IF NOT EXISTS jogadoresTest (
-  //         id INTEGER PRIMARY KEY AUTOINCREMENT, 
-  //         nome TEXT,
-  //         idade INTEGER,
-  //         preco REAL
-  //       );
-  //     `
-  //  );
-}
+//   // await db.execAsync(`
+//   //   PRAGMA journal_mode = WAL;
+//   //       CREATE TABLE IF NOT EXISTS jogadoresTest (
+//   //         id INTEGER PRIMARY KEY AUTOINCREMENT, 
+//   //         nome TEXT,
+//   //         idade INTEGER,
+//   //         preco REAL
+//   //       );
+//   //     `
+//   //  );
+// }
 
 // precisa ser runAsyc
 async function insert(jogador) {
-  const db = await SQLite.openDatabaseAsync('N2_AlbumJogadores');
+  // const db = await SQLite.openDatabaseAsync('N2_AlbumJogadores');
+  const db = await DatabaseService.getDatabase(); 
   try {
     await db.runAsync( 
       `INSERT INTO jogadores
@@ -77,7 +78,8 @@ async function insert(jogador) {
 }
 
 async function deleteJogadorById(id) {
-  const db = await SQLite.openDatabaseAsync('N2_AlbumJogadores');
+  // const db = await SQLite.openDatabaseAsync('N2_AlbumJogadores');
+  const db = await DatabaseService.getDatabase(); 
 
   try {
     await db.runAsync(`DELETE FROM jogadores WHERE id = ?;`, [id]);
@@ -88,7 +90,8 @@ async function deleteJogadorById(id) {
 }
 
 async function update(jogador) {
-  const db = await SQLite.openDatabaseAsync('N2_AlbumJogadores');
+  // const db = await SQLite.openDatabaseAsync('N2_AlbumJogadores');
+  const db = await DatabaseService.getDatabase(); 
 
   try {
     await db.runAsync(
@@ -127,7 +130,8 @@ async function update(jogador) {
 // precisa ser getAllAsync
 async function getJogadores() {  
   console.log('entrou no get');  
-  const db = await SQLite.openDatabaseAsync('N2_AlbumJogadores');
+  // const db = await SQLite.openDatabaseAsync('N2_AlbumJogadores');
+  const db = await DatabaseService.getDatabase(); 
   const rows = await db.getAllAsync(
     'SELECT * FROM jogadores;'    
   ); 
@@ -144,28 +148,32 @@ async function getJogadores() {
 }
 
 async function getJogadorById(id) {
-  const db = await SQLite.openDatabaseAsync('N2_AlbumJogadores');
+  // const db = await SQLite.openDatabaseAsync('N2_AlbumJogadores');
+  const db = await DatabaseService.getDatabase(); 
   const result = await db.getFirstAsync('SELECT * FROM jogadores WHERE id = ?;', [id]);
   return result;
 }
 
 async function deleteJogadores() {
   console.log('linhas apagadas apagada');
-  const db = await SQLite.openDatabaseAsync('N2_AlbumJogadores');
+  // const db = await SQLite.openDatabaseAsync('N2_AlbumJogadores');
+  const db = await DatabaseService.getDatabase();  
  await db.runAsync('DELETE FROM jogadores;');
   
 }
 
 async function deleteTable() {
   console.log('tabela apagada'); 
-  const db = await SQLite.openDatabaseAsync('N2_AlbumJogadores');
+  // const db = await SQLite.openDatabaseAsync('N2_AlbumJogadores');
+  const db = await DatabaseService.getDatabase(); 
   await db.runAsync('DROP TABLE IF EXISTS jogadores;'); 
    
 }  
 
 async function deleteTableTest() {
   console.log('tabela apagada'); 
-  const db = await SQLite.openDatabaseAsync('N2_AlbumJogadores');
+  // const db = await SQLite.openDatabaseAsync('N2_AlbumJogadores');
+  const db = await DatabaseService.getDatabase(); 
   await db.runAsync('DROP TABLE IF EXISTS jogadoresTest;'); 
    
 }  

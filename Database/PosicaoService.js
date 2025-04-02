@@ -1,7 +1,7 @@
 import * as SQLite from 'expo-sqlite';
+import DatabaseService from './DatabaseService';
 
 const PosicaoService = {
-  init,
   insert,
   getAll,
   update,
@@ -10,23 +10,24 @@ const PosicaoService = {
 
 export default PosicaoService;
 
-async function init() {
-  const db = await SQLite.openDatabaseAsync('N2_AlbumJogadores');
-  try {
-    await db.execAsync(`
-      CREATE TABLE IF NOT EXISTS posicoes (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        nome TEXT NOT NULL
-      );
-    `);
-    console.log('Tabela posicoes criada/verificada.');
-  } catch (error) {
-    console.error('Erro ao criar tabela posicoes:', error.message);
-  }
-}
+// async function init() {
+//   const db = await SQLite.openDatabaseAsync('N2_AlbumJogadores');
+//   try {
+//     await db.execAsync(`
+//       CREATE TABLE IF NOT EXISTS posicoes (
+//         id INTEGER PRIMARY KEY AUTOINCREMENT,
+//         nome TEXT NOT NULL
+//       );
+//     `);
+//     console.log('Tabela posicoes criada/verificada.');
+//   } catch (error) {
+//     console.error('Erro ao criar tabela posicoes:', error.message);
+//   }
+// }
 
 async function insert(nome) {
-  const db = await SQLite.openDatabaseAsync('N2_AlbumJogadores');
+  // const db = await SQLite.openDatabaseAsync('N2_AlbumJogadores');
+  const db = await DatabaseService.getDatabase(); 
   try {
     await db.runAsync(`INSERT INTO posicoes (nome) VALUES (?);`, [nome]);
     console.log('Posição inserida:', nome);
@@ -36,7 +37,8 @@ async function insert(nome) {
 }
 
 async function getAll() {
-  const db = await SQLite.openDatabaseAsync('N2_AlbumJogadores');
+  // const db = await SQLite.openDatabaseAsync('N2_AlbumJogadores');
+  const db = await DatabaseService.getDatabase(); 
   try {
     const rows = await db.getAllAsync('SELECT * FROM posicoes;');
     console.log('Posições encontradas:', rows);
@@ -56,7 +58,8 @@ async function getAll() {
 }
 
 async function update(posicao) {
-  const db = await SQLite.openDatabaseAsync('N2_AlbumJogadores');
+  // const db = await SQLite.openDatabaseAsync('N2_AlbumJogadores');
+  const db = await DatabaseService.getDatabase(); 
   try {
     await db.runAsync(
       `UPDATE posicoes SET nome = ? WHERE id = ?;`,
@@ -69,7 +72,8 @@ async function update(posicao) {
 }
 
 async function deleteById(id) {
-  const db = await SQLite.openDatabaseAsync('N2_AlbumJogadores');
+  // const db = await SQLite.openDatabaseAsync('N2_AlbumJogadores');
+  const db = await DatabaseService.getDatabase(); 
   try {
     await db.runAsync(`DELETE FROM posicoes WHERE id = ?;`, [id]);
     console.log(`Posição com id ${id} deletada.`);
