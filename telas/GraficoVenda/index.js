@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ScrollView, StyleSheet, View, Alert } from 'react-native';
+import { ScrollView, StyleSheet, View, Alert, ImageBackground } from 'react-native';
 import { Card, Text, Title, Button } from 'react-native-paper';
 import { PieChart, BarChart } from 'react-native-chart-kit'; 
 import { Dimensions } from 'react-native';
@@ -10,8 +10,8 @@ import JogadorService from '../../Database/JogadorService';
 const screenWidth = Dimensions.get('window').width;
 
 export default function GraficoVenda({ navigation }) {
-  const [jogadoresVendidos, setJogadoresVendidos] = useState([]); // Inicializado como array vazio
-  const [vendasPorPosicao, setVendasPorPosicao] = useState({ posicoes: [], quantidade: [] }); // Inicializado com objetos vazios
+  const [jogadoresVendidos, setJogadoresVendidos] = useState([]);
+  const [vendasPorPosicao, setVendasPorPosicao] = useState({ posicoes: [], quantidade: [] });
   
   useEffect(() => {
     carregarDados();
@@ -19,36 +19,32 @@ export default function GraficoVenda({ navigation }) {
 
   const carregarDados = async () => {
     try {
-      const itensVenda = await VendaItemService.getAll(); // Pega todos os itens vendidos diretamente
-      const jogadores = await JogadorService.getJogadores(); // Lista completa de jogadores
+      const itensVenda = await VendaItemService.getAll();
+      const jogadores = await JogadorService.getJogadores();
   
-      const jogadorVendidoMap = {}; // { jogadorId: quantidade }
-      const posicaoMap = {};        // { posicao: quantidade }
+      const jogadorVendidoMap = {};
+      const posicaoMap = {};
   
       itensVenda.forEach(item => {
         const jogador = jogadores.find(j => j.id === item.produto_id);
         if (!jogador) return;
   
-        // Contabiliza por jogador
         if (!jogadorVendidoMap[jogador.nome]) {
           jogadorVendidoMap[jogador.nome] = 0;
         }
         jogadorVendidoMap[jogador.nome] += item.quantidade;
   
-        // Contabiliza por posição
         if (!posicaoMap[jogador.posicao]) {
           posicaoMap[jogador.posicao] = 0;
         }
         posicaoMap[jogador.posicao] += item.quantidade;
       });
   
-      // Preparar dados para gráfico de barra (jogadores vendidos)
       const jogadoresVendidosData = Object.keys(jogadorVendidoMap).map(nome => ({
         nome,
         quantidade: jogadorVendidoMap[nome]
       }));
   
-      // Preparar dados para gráfico de pizza (posições)
       const posicoes = Object.keys(posicaoMap);
       const quantidadePorPosicao = Object.values(posicaoMap);
   
@@ -59,119 +55,193 @@ export default function GraficoVenda({ navigation }) {
     }
   };
 
-  // Gráfico de quantidade de jogadores vendidos
   const jogadorQuantidades = jogadoresVendidos.map(jogador => jogador.quantidade);
   const jogadorNomes = jogadoresVendidos.map(jogador => jogador.nome);
-
-  // Gráfico de vendas por posição
   const { posicoes, quantidade } = vendasPorPosicao;
 
-  // Condicional para evitar erro antes de carregar os dados
   if (!jogadoresVendidos.length || !posicoes.length) {
-    return <Text>Carregando dados...</Text>;
+    return (
+      <View style={[styles.container, {justifyContent: 'center', alignItems: 'center'}]}>
+        <Text style={styles.loadingText}>Carregando dados...</Text>
+      </View>
+    );
   }
 
-  // Preparando os dados para o gráfico de pizza
   const pieData = posicoes.map((posicao, idx) => ({
     name: posicao,
     population: quantidade[idx],
-    color: `#${Math.floor(Math.random()*16777215).toString(16)}`, // Gerando uma cor aleatória
-    legendFontColor: "#7F7F7F",
-    legendFontSize: 15
+    color: `#${Math.floor(Math.random()*16777215).toString(16)}`,
+    legendFontColor: "#FFFFFF",
+    legendFontSize: 12
   }));
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-        <Title style={styles.title}>Dashboards</Title>
+    <ImageBackground 
+      source={require('../../assets/fifa-background.jpg')} // Adicione um background apropriado
+      style={styles.backgroundImage}
+    >
+      <ScrollView contentContainerStyle={styles.container}>
+        <Title style={styles.title}>DASHBOARDS</Title>
 
-      <Button mode="outlined" onPress={() => navigation.goBack()} style={styles.backButton}>
-        Voltar para Lista de Vendas
+        <Button 
+          mode="outlined" 
+          onPress={() => navigation.goBack()} 
+          style={styles.backButton}
+          labelStyle={styles.buttonText}
+        >
+          VOLTAR
         </Button>
 
-      {/* Gráfico de quantidade de jogadores vendidos */}
-      <View style={styles.chartContainer}>
-        <Text style={styles.chartTitle}>Quantidade de Jogadores Vendidos</Text>
-        <BarChart
-  data={{
-    labels: jogadorNomes,
-    datasets: [
-      {
-        data: jogadorQuantidades,
-      },
-    ],
-  }}
-  width={screenWidth - 40}
-  height={220}
-  fromZero={true}
-  showValuesOnTopOfBars={true}
-  withInnerLines={true}
-  withVerticalLabels={true}
-  segments={Math.max(...jogadorQuantidades)} // número de linhas do eixo Y
-  chartConfig={{
-    backgroundColor: '#f5f5f5',
-    backgroundGradientFrom: '#e1e1e1',
-    backgroundGradientTo: '#ffffff',
-    decimalPlaces: 0,
-    color: (opacity = 1) => `rgba(66, 135, 245, ${opacity})`,
-    labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-    fillShadowGradient: '#4287f5',
-    fillShadowGradientOpacity: 1,
-    propsForBackgroundLines: {
-      strokeDasharray: '', // linha contínua
-    },
-  }}
-  yAxisLabel=""
-  yAxisSuffix=""
-  yLabelsOffset={10}
-  verticalLabelRotation={30}
-/>
-      </View>
+        {/* Gráfico de quantidade de jogadores vendidos */}
+        <Card style={styles.card}>
+          <Card.Content>
+            <Text style={styles.cardTitle}>JOGADORES VENDIDOS</Text>
+            <BarChart
+              data={{
+                labels: jogadorNomes,
+                datasets: [{ data: jogadorQuantidades }],
+              }}
+              width={screenWidth - 40}
+              height={220}
+              fromZero={true}
+              showValuesOnTopOfBars={true}
+              withInnerLines={true}
+              withVerticalLabels={true}
+              segments={Math.max(...jogadorQuantidades)}
+              chartConfig={{
+                backgroundColor: '#0a1f3a',
+                backgroundGradientFrom: '#0a1f3a',
+                backgroundGradientTo: '#14325a',
+                decimalPlaces: 0,
+                color: (opacity = 1) => `rgba(0, 150, 255, ${opacity})`,
+                labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                fillShadowGradient: '#0096FF',
+                fillShadowGradientOpacity: 1,
+                propsForBackgroundLines: {
+                  strokeWidth: 0.5,
+                  stroke: 'rgba(255, 255, 255, 0.2)',
+                },
+              }}
+              yAxisLabel=""
+              yAxisSuffix=""
+              yLabelsOffset={10}
+              verticalLabelRotation={30}
+            />
+          </Card.Content>
+        </Card>
 
-      {/* Gráfico de vendas por posição (Gráfico de Pizza) */}
-      <View style={styles.chartContainer}>
-  <Text style={styles.chartTitle}>Vendas por Posição</Text>
-  <PieChart
-    data={pieData}
-    width={screenWidth - 40}
-    height={220}
-    chartConfig={{
-      backgroundColor: '#f5f5f5',
-      backgroundGradientFrom: '#e1e1e1',
-      backgroundGradientTo: '#ffffff',
-      decimalPlaces: 0,
-      color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-      labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-    }}
-    accessor="population"
-    backgroundColor="transparent"
-    style={{ marginVertical: 20 }}
-  />
+        {/* Gráfico de vendas por posição */}
+        <Card style={styles.card}>
+          <Card.Content>
+            <Text style={styles.cardTitle}>VENDAS POR POSIÇÃO</Text>
+            <PieChart
+              data={pieData}
+              width={screenWidth - 40}
+              height={220}
+              chartConfig={{
+                backgroundColor: '#0a1f3a',
+                backgroundGradientFrom: '#0a1f3a',
+                backgroundGradientTo: '#14325a',
+                decimalPlaces: 0,
+                color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`, 
+              }}
+              accessor="population"
+              backgroundColor="transparent"
+              paddingLeft="15"
+              absolute
+              style={{ marginVertical: 10 }}
+            />
 
-  {/* Descrição abaixo do gráfico */}
-  <View style={{ marginTop: 10 }}>
-    <Text style={{ fontWeight: 'bold', fontSize: 16 }}>Resumo:</Text>
-    <Text>Total de jogadores vendidos: {quantidade.reduce((a, b) => a + b, 0)}</Text>
-    {posicoes.map((pos, idx) => (
-      <Text key={idx}>{pos}: {quantidade[idx]}</Text>
-    ))}
-  </View>
-</View>
-    </ScrollView>
+            <View style={styles.summaryContainer}>
+              <Text style={styles.summaryTitle}>RESUMO:</Text>
+              <Text style={styles.summaryText}>Total de jogadores vendidos: {quantidade.reduce((a, b) => a + b, 0)}</Text>
+              {posicoes.map((pos, idx) => (
+                <Text key={idx} style={styles.summaryText}>{pos}: {quantidade[idx]}</Text>
+              ))}
+            </View>
+          </Card.Content>
+        </Card>
+      </ScrollView>
+    </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
+  backgroundImage: {
+    flex: 1,
+    resizeMode: 'cover',
+  },
   container: {
     padding: 20,
     flexGrow: 1,
-    backgroundColor: '#f8f8f8',
+    backgroundColor: 'rgba(10, 31, 58, 0.85)',
   },
-  chartContainer: {
-    marginBottom: 30,
+  title: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: '#FFFFFF',
+    textAlign: 'center',
+    marginVertical: 20,
+    textShadowColor: 'rgba(0, 150, 255, 0.7)',
+    textShadowOffset: { width: 0, height: 0 },
+    textShadowRadius: 10,
   },
-  chartTitle: {
+  card: {
+    backgroundColor: 'rgba(20, 50, 90, 0.8)',
+    borderRadius: 8,
+    marginBottom: 25,
+    borderWidth: 1,
+    borderColor: 'rgba(0, 150, 255, 0.3)',
+    elevation: 5,
+    shadowColor: '#0096FF',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+  },
+  cardTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    marginBottom: 10,
+    color: '#FFFFFF',
+    marginBottom: 15,
+    textAlign: 'center',
+    letterSpacing: 1,
+  },
+  backButton: {
+    backgroundColor: 'rgba(0, 150, 255, 0.2)',  
+    borderColor: '#0096FF',                    
+    borderWidth: 1,
+    borderRadius: 4,
+    marginBottom: 25,
+    paddingVertical: 5,
+  },  
+  buttonText: {
+    color: '#FFFFFF',
+    fontWeight: 'bold',
+    fontSize: 14,
+  },
+  summaryContainer: {
+    marginTop: 15,
+    padding: 10,
+    backgroundColor: 'rgba(0, 150, 255, 0.1)',
+    borderRadius: 5,
+    borderLeftWidth: 3,
+    borderLeftColor: '#0096FF',
+  },
+  sumaryTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#FFFFFF',
+    marginBottom: 5,
+  },
+  summaryText: {
+    fontSize: 14,
+    color: '#FFFFFF',
+    marginVertical: 2,
+  },
+  loadingText: {
+    fontSize: 18,
+    color: '#FFFFFF',
+    fontWeight: 'bold',
   },
 });

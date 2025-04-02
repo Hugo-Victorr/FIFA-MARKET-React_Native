@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, ScrollView, StyleSheet, Alert } from 'react-native';
+import { View, ScrollView, StyleSheet, Alert, ImageBackground } from 'react-native';
 import { TextInput, Button, Title } from 'react-native-paper';
 import JogadorService from '../../Database/JogadorService';
 import PosicaoService from '../../Database/PosicaoService';
@@ -18,7 +18,7 @@ export default function CadJogador({ route, navigation }) {
   const [conducao, setConducao] = useState('');
   const [defesa, setDefesa] = useState('');
   const [fisico, setFisico] = useState('');
-  const [preco, setPreco] = useState(''); 
+  const [preco, setPreco] = useState('');
 
   const [open, setOpen] = useState(false);
   const [items, setItems] = useState([]);
@@ -83,58 +83,224 @@ export default function CadJogador({ route, navigation }) {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <Title style={styles.title}>{editar ? 'Editar Jogador' : 'Cadastrar Jogador'}</Title>
+    <ImageBackground 
+      source={require('../../assets/fifa-background.jpg')}
+      style={styles.backgroundImage}
+    >
+      <ScrollView contentContainerStyle={styles.container}>
+        <Title style={styles.title}>
+          {editar ? 'EDITAR JOGADOR' : 'CADASTRAR JOGADOR'}
+        </Title>
 
-      <Button mode="outlined" onPress={() => navigation.goBack()} style={styles.backButton}>
-          Voltar para Lista de Jogadores
+        <Button 
+          mode="contained" 
+          onPress={() => navigation.goBack()} 
+          style={styles.backButton}
+          labelStyle={styles.buttonText}
+        >
+          VOLTAR
         </Button>
 
-      <TextInput label="Nome" value={nome} onChangeText={setNome} style={styles.input} mode="outlined" />
-      <TextInput label="Idade" value={idade} onChangeText={setIdade} style={styles.input} keyboardType="numeric" mode="outlined" />
+        <View style={styles.formContainer}>
+          <TextInput 
+            label="NOME" 
+            value={nome} 
+            onChangeText={setNome} 
+            style={styles.input} 
+            mode="outlined"
+            theme={inputTheme}
+          />
+          
+          <TextInput 
+            label="IDADE" 
+            value={idade} 
+            onChangeText={setIdade} 
+            style={styles.input} 
+            keyboardType="numeric" 
+            mode="outlined"
+            theme={inputTheme}
+          />
 
-      <DropDownPicker
-        placeholder='Selecione uma posição'
-        open={open}
-        value={posicao}
-        items={items}
-        setOpen={setOpen}
-        setValue={setPosicao}
-        setItems={setItems}
-        listMode="SCROLLVIEW"
-        style={styles.input}
-      />
+          <DropDownPicker
+            placeholder="SELECIONE UMA POSIÇÃO"
+            open={open}
+            value={posicao}
+            items={items}
+            setOpen={setOpen}
+            setValue={setPosicao}
+            setItems={setItems}
+            listMode="SCROLLVIEW"
+            style={[styles.input, styles.dropdown]}
+            dropDownContainerStyle={styles.dropdownContainer}
+            textStyle={styles.dropdownText}
+            labelStyle={styles.dropdownLabel}
+            theme="DARK"
+          />
 
-      <TextInput label="Ritmo" value={ritmo} onChangeText={setRitmo} style={styles.input} keyboardType="numeric" mode="outlined" />
-      <TextInput label="Finalização" value={finalizacao} onChangeText={setFinalizacao} style={styles.input} keyboardType="numeric" mode="outlined" />
-      <TextInput label="Passe" value={passe} onChangeText={setPasse} style={styles.input} keyboardType="numeric" mode="outlined" />
-      <TextInput label="Condução" value={conducao} onChangeText={setConducao} style={styles.input} keyboardType="numeric" mode="outlined" />
-      <TextInput label="Defesa" value={defesa} onChangeText={setDefesa} style={styles.input} keyboardType="numeric" mode="outlined" />
-      <TextInput label="Físico" value={fisico} onChangeText={setFisico} style={styles.input} keyboardType="numeric" mode="outlined" />
-      <TextInput label="Preço" value={preco} onChangeText={setPreco} style={styles.input} keyboardType="numeric" mode="outlined" />
+          <TextInput 
+            label="RITMO" 
+            value={ritmo} 
+            onChangeText={setRitmo} 
+            style={styles.input} 
+            keyboardType="numeric" 
+            mode="outlined"
+            theme={inputTheme}
+          />
+          
+          <TextInput 
+            label="FINALIZAÇÃO" 
+            value={finalizacao} 
+            onChangeText={setFinalizacao} 
+            style={styles.input} 
+            keyboardType="numeric" 
+            mode="outlined"
+            theme={inputTheme}
+          />
+          
+          <TextInput 
+            label="PASSE" 
+            value={passe} 
+            onChangeText={setPasse} 
+            style={styles.input} 
+            keyboardType="numeric" 
+            mode="outlined"
+            theme={inputTheme}
+          />
+          
+          <TextInput 
+            label="CONDUÇÃO" 
+            value={conducao} 
+            onChangeText={setConducao} 
+            style={styles.input} 
+            keyboardType="numeric" 
+            mode="outlined"
+            theme={inputTheme}
+          />
+          
+          <TextInput 
+            label="DEFESA" 
+            value={defesa} 
+            onChangeText={setDefesa} 
+            style={styles.input} 
+            keyboardType="numeric" 
+            mode="outlined"
+            theme={inputTheme}
+          />
+          
+          <TextInput 
+            label="FÍSICO" 
+            value={fisico} 
+            onChangeText={setFisico} 
+            style={styles.input} 
+            keyboardType="numeric" 
+            mode="outlined"
+            theme={inputTheme}
+          />
+          
+          <TextInput 
+            label="PREÇO (R$)" 
+            value={preco} 
+            onChangeText={setPreco} 
+            style={styles.input} 
+            keyboardType="numeric" 
+            mode="outlined"
+            theme={inputTheme}
+          />
 
-      <Button mode="contained" onPress={handleSalvar} style={styles.button}>
-        {editar ? 'Atualizar' : 'Cadastrar'}
-      </Button>
-    </ScrollView> 
+          <Button 
+            mode="contained" 
+            onPress={handleSalvar} 
+            style={styles.saveButton}
+            labelStyle={styles.buttonText}
+          >
+            {editar ? 'ATUALIZAR' : 'CADASTRAR'}
+          </Button>
+        </View>
+      </ScrollView>
+    </ImageBackground>
   );
 }
 
+const inputTheme = {
+  colors: {
+    primary: '#0096FF',
+    background: 'rgba(20, 50, 90, 0.7)',
+    text: '#FFFFFF',
+    placeholder: '#AAAAAA',
+    surface: 'rgba(20, 50, 90, 0.7)',
+    accent: '#0096FF',
+  },
+  roundness: 4,
+};
+
 const styles = StyleSheet.create({
+  backgroundImage: {
+    flex: 1,
+    resizeMode: 'cover',
+  },
   container: {
     padding: 20,
     flexGrow: 1,
-    backgroundColor: '#f0f0f0', 
+    backgroundColor: 'rgba(10, 31, 58, 0.85)',
   },
   title: {
+    fontSize: 24,
+    fontWeight: 'bold',
     marginBottom: 20,
-    fontSize: 22,
-    textAlign: 'center'
+    textAlign: 'center',
+    color: '#FFFFFF',
+    textShadowColor: 'rgba(0, 150, 255, 0.7)',
+    textShadowOffset: { width: 0, height: 0 },
+    textShadowRadius: 10,
+    letterSpacing: 1,
+  },
+  formContainer: {
+    backgroundColor: 'rgba(20, 50, 90, 0.5)',
+    borderRadius: 8,
+    padding: 15,
+    borderWidth: 1,
+    borderColor: 'rgba(0, 150, 255, 0.3)',
   },
   input: {
-    marginBottom: 12,
+    marginBottom: 15,
+    backgroundColor: 'rgba(20, 50, 90, 0.7)',
+    borderRadius: 4,
   },
-  button: {
+  dropdown: {
+    borderColor: '#0096FF',
+    backgroundColor: 'rgba(20, 50, 90, 0.7)',
+    minHeight: 50,
+  },
+  dropdownContainer: {
+    backgroundColor: 'rgba(20, 50, 90, 0.9)',
+    borderColor: '#0096FF',
+  },
+  dropdownText: {
+    color: '#FFFFFF',
+  },
+  dropdownLabel: {
+    color: '#AAAAAA',
+  },
+  backButton: {
+    backgroundColor: '#0096FF',
+    borderColor: '#00B4FF',
+    borderWidth: 1,
+    borderRadius: 4,
+    marginBottom: 20,
+    paddingVertical: 5,
+  },
+  saveButton: {
+    backgroundColor: '#00C853',
+    borderColor: '#00E676',
+    borderWidth: 1,
+    borderRadius: 4,
     marginTop: 20,
+    paddingVertical: 5,
+  },
+  buttonText: {
+    color: '#FFFFFF',
+    fontWeight: 'bold',
+    fontSize: 14,
+    letterSpacing: 0.5,
   },
 });

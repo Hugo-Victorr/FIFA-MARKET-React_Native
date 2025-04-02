@@ -1,7 +1,8 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Provider as PaperProvider } from 'react-native-paper';
-
+import { Audio } from 'expo-av';
+import { useEffect } from 'react';
 
 import Home from './telas/Home';
 import CadJogador from './telas/CadJogador';
@@ -19,7 +20,7 @@ export default function App() {
     <PaperProvider>
       <NavigationContainer>
         <Stack.Navigator initialRouteName="Home">
-          <Stack.Screen name="Home" component={Home} options={{ headerBackVisible: false}} />
+          <Stack.Screen name="Home" component={Home} options={{ headerBackVisible: false, headerShown: false}} />
           <Stack.Screen name="ListaJogador" component={ListaJogador} options={{ headerBackVisible: false, headerShown: false }} />
           <Stack.Screen name="ListaPosicao" component={ListaPosicao} options={{ headerBackVisible: false, headerShown: false }} />
           <Stack.Screen name="CadJogador" component={CadJogador} options={{ headerBackVisible: false, headerShown: false }} />

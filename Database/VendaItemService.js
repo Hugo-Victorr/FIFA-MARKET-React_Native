@@ -15,7 +15,7 @@ const VendaItemService = {
   
     try {
       await db.execAsync(`
-        CREATE TABLE IF NOT EXISTS venda_itens (
+        CREATE TABLE IF NOT EXISTS venda_itens ( 
           id INTEGER PRIMARY KEY AUTOINCREMENT,
           venda_id INTEGER,
           produto_id INTEGER,
