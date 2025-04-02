@@ -60,7 +60,7 @@ async function update(posicao) {
   try {
     await db.runAsync(
       `UPDATE posicoes SET nome = ? WHERE id = ?;`,
-      [posicao.nome, 1]
+      [posicao.nome, posicao.id]
     );
     console.log(`Posição com id ${posicao.id} atualizada.`);
   } catch (error) {

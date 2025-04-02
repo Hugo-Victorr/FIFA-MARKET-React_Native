@@ -8,7 +8,7 @@ import PosicaoService from '../../Database/PosicaoService';
 import VendaService from '../../Database/VendaService';
 import VendaItemService from '../../Database/VendaItemService';
 
-export default function CompraJogador() {
+export default function CompraJogador({ navigation }) {
   const [jogadores, setJogadores] = useState([]);
   const [filteredJogadores, setFilteredJogadores] = useState([]);
   const [quantidades, setQuantidades] = useState({});
@@ -23,7 +23,7 @@ export default function CompraJogador() {
   }, []);
 
   useEffect(() => {
-    if (filtroPosicao) {
+    if (filtroPosicao && filtroPosicao !== 'TODAS') {
       const filtrado = jogadores.filter(j => j.posicao === filtroPosicao);
       setFilteredJogadores(filtrado);
     } else {
@@ -33,7 +33,7 @@ export default function CompraJogador() {
 
   const carregarPosicoes = async () => {
     const lista = await PosicaoService.getAll();
-    const formatado = lista.map(p => ({ label: p.nome, value: p.nome }));
+    const formatado = [{ label: 'Todas as Posições', value: 'TODAS' }, ...lista.map(p => ({ label: p.nome, value: p.nome }))];
     setPosicoes(formatado);
   };
 
@@ -80,7 +80,7 @@ export default function CompraJogador() {
 
   const handleFinalizarCompra = async () => {
     try {
-      const carrinhoStr = await AsyncStorage.getItem('carrinho');
+      const carrinhoStr = await AsyncStorage.getItem('carrinho'); 
       const carrinho = carrinhoStr ? JSON.parse(carrinhoStr) : [];
 
       if (carrinho.length === 0) {
@@ -93,9 +93,9 @@ export default function CompraJogador() {
       const forma_pagamento = 'Cartão';
 
       const venda = { data, total, forma_pagamento };
-      await VendaService.insertVenda(venda);
+      await VendaService.insert(venda);
 
-      const vendas = await VendaService.getVendas();
+      const vendas = await VendaService.getAll();
       const ultimaVenda = vendas[vendas.length - 1];
       const venda_id = ultimaVenda.id;
 
@@ -107,13 +107,17 @@ export default function CompraJogador() {
           preco_unit: item.preco_unit,
           subtotal: item.subtotal
         };
-        await insertVendaItem(itemVenda);
+        await VendaItemService.insert(itemVenda);
       }
-
+      
+      Alert.alert('Compra Finalizada', 'Sua compra foi registrada com sucesso!', [
+        { text: 'Continuar Comprando'},
+        { text: 'Ver Compras', onPress: () => navigation.navigate('ListaVenda') }, 
+      ]);
+      
       await AsyncStorage.removeItem('carrinho');
       setQuantidades({});
       
-      Alert.alert('Compra Finalizada', 'Sua compra foi registrada com sucesso!');
     } catch (error) {
       Alert.alert('Erro', 'Erro ao finalizar a compra.');
     }
@@ -122,6 +126,10 @@ export default function CompraJogador() {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Title style={styles.title}>Comprar Jogadores</Title>
+
+      <Button mode="outlined" onPress={() => navigation.goBack()} style={styles.backButton}>
+        Voltar para Home
+      </Button>
 
       <DropDownPicker
         placeholder="Filtrar por posição"

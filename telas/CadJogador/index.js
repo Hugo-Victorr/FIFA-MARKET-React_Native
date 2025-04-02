@@ -37,7 +37,7 @@ export default function CadJogador({ route, navigation }) {
   useEffect(() => {
     if (editar && jogadorEdicao) {
       setNome(jogadorEdicao.nome);
-      setIdade(String(jogadorEdicao.idade));
+      setIdade(String(jogadorEdicao.idade)); 
       setPosicao(jogadorEdicao.posicao);
       setRitmo(String(jogadorEdicao.ritmo));
       setFinalizacao(String(jogadorEdicao.finalizacao));
@@ -66,14 +66,18 @@ export default function CadJogador({ route, navigation }) {
 
     try {
       if (editar) {
-        await JogadorService.updateJogador(jogador);
-        Alert.alert('Sucesso', 'Jogador atualizado com sucesso!');
+        await JogadorService.update(jogador);
+        Alert.alert('Sucesso', 'Jogador atualizado com sucesso!', [
+          { text: 'OK', onPress: () => navigation.navigate('ListaJogador') }
+        ]);
       } else {
         await JogadorService.insert(jogador);
-        Alert.alert('Sucesso', 'Jogador cadastrado com sucesso!');
+        Alert.alert('Sucesso', 'Jogador cadastrado com sucesso!', [
+          { text: 'OK', onPress: () => navigation.navigate('ListaJogador') }
+        ]);
       }
-      // navigation.goBack();
     } catch (error) {
+      console.error('Erro ao salvar jogador:', error.message);
       Alert.alert('Erro', 'Erro ao salvar jogador.');
     }
   };
@@ -81,6 +85,10 @@ export default function CadJogador({ route, navigation }) {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Title style={styles.title}>{editar ? 'Editar Jogador' : 'Cadastrar Jogador'}</Title>
+
+      <Button mode="outlined" onPress={() => navigation.goBack()} style={styles.backButton}>
+          Voltar para Lista de Jogadores
+        </Button>
 
       <TextInput label="Nome" value={nome} onChangeText={setNome} style={styles.input} mode="outlined" />
       <TextInput label="Idade" value={idade} onChangeText={setIdade} style={styles.input} keyboardType="numeric" mode="outlined" />

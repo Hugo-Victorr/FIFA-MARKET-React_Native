@@ -3,9 +3,11 @@ import * as SQLite from 'expo-sqlite';
 const JogadorService = {
   init,
   insert,
-  updateJogador,
+  update,
   getJogadores,
+  getJogadorById,
   deleteJogadores,
+  deleteJogadorById,
   deleteTable,
   deleteTableTest
 };
@@ -85,7 +87,7 @@ async function deleteJogadorById(id) {
   }
 }
 
-async function updateJogador(jogador) {
+async function update(jogador) {
   const db = await SQLite.openDatabaseAsync('N2_AlbumJogadores');
 
   try {
@@ -116,7 +118,7 @@ async function updateJogador(jogador) {
         jogador.id // last param for WHERE id = ?
       ]
     );
-    console.log(`Jogador com id ${jogador.id} atualizado.`);
+    console.log(`Jogador com id ${jogador.id} atualizado.`); 
   } catch (error) {
     console.error('Erro ao atualizar jogador:', error.message); 
   }
@@ -124,7 +126,7 @@ async function updateJogador(jogador) {
 
 // precisa ser getAllAsync
 async function getJogadores() {  
-  console.log('entrou no get'); 
+  console.log('entrou no get');  
   const db = await SQLite.openDatabaseAsync('N2_AlbumJogadores');
   const rows = await db.getAllAsync(
     'SELECT * FROM jogadores;'    
@@ -139,6 +141,12 @@ async function getJogadores() {
 
   return rows;
   
+}
+
+async function getJogadorById(id) {
+  const db = await SQLite.openDatabaseAsync('N2_AlbumJogadores');
+  const result = await db.getFirstAsync('SELECT * FROM jogadores WHERE id = ?;', [id]);
+  return result;
 }
 
 async function deleteJogadores() {

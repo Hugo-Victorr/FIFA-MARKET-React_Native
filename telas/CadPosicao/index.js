@@ -33,38 +33,48 @@ export default function CadPosicao({ route, navigation }) {
     try {
       if (editar) {
         await PosicaoService.update(posicao);
-        Alert.alert('Sucesso', 'Posição atualizada com sucesso!');
+        Alert.alert('Sucesso', 'Posição atualizada com sucesso!', [
+          { text: 'OK', onPress: () => navigation.navigate('ListaPosicao') }
+        ]);
       } else {
-        await PosicaoService.insert(nome);
-        Alert.alert('Sucesso', 'Posição cadastrada com sucesso!');
+        await PosicaoService.insert(posicao.nome);
+        Alert.alert('Sucesso', 'Posição cadastrada com sucesso!', [
+          { text: 'OK', onPress: () => navigation.navigate('ListaPosicao') }
+        ]);
       }
-      PosicaoService.getAll();
-    //   navigation.goBack();
     } catch (error) {
-      Alert.alert('Erro', 'Erro ao salvar posição.');
+      console.error('Erro ao salvar Posição:', error.message);
+      Alert.alert('Erro', 'Erro ao salvar Posição.');
     }
   };
 
-  const handleDeletar = async () => {
-    const posicao = {
-      id: posicaoEdicao?.id,
-      nome,
-    };
+  // const handleDeletar = async () => {
+  //   const posicao = {
+  //     id: posicaoEdicao?.id,
+  //     nome,
+  //   };
 
-    try {
-        await PosicaoService.deleteById(1);
-        Alert.alert('Sucesso', 'Posição deletada com sucesso!');
+  //   try {
+  //       await PosicaoService.deleteById(1);
+  //       Alert.alert('Sucesso', 'Posição deletada com sucesso!', [
+  //         { text: 'OK', onPress: () => navigation.navigate('ListaPosicao') }
+  //       ]);
       
-      PosicaoService.getAll();
-    //   navigation.goBack();
-    } catch (error) {
-      Alert.alert('Erro', 'Erro ao salvar posição.');
-    }
-  };
+  //     PosicaoService.getAll();
+  //   //   navigation.goBack();
+  //   } catch (error) {
+  //     Alert.alert('Erro', 'Erro ao salvar posição.');
+  //   }
+  // };
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Title style={styles.title}>{editar ? 'Editar Posição' : 'Cadastrar Posição'}</Title>
+
+      <Button mode="outlined" onPress={() => navigation.goBack()} style={styles.backButton}>
+        Voltar para Lista de Posições
+      </Button>
+
       <TextInput
         label="Nome da Posição"
         value={nome}
