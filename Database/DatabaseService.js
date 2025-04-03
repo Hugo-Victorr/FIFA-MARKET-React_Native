@@ -2,7 +2,8 @@ import * as SQLite from 'expo-sqlite';
 
 const DatabaseService = {
     init,
-    getDatabase
+    getDatabase,
+    deleteTable
   };
 
   export default DatabaseService;
@@ -88,5 +89,14 @@ catch (error){
   } catch (error) {
     console.error('Erro ao criar tabela vendas:', error.message);
   }
+}
+
+async function deleteTable() { 
+  const db = await getDatabase(); 
+  await db.runAsync('DROP TABLE IF EXISTS jogadores;'); 
+  await db.runAsync('DROP TABLE IF EXISTS posicoes;'); 
+  await db.runAsync('DROP TABLE IF EXISTS venda_itens;'); 
+  await db.runAsync('DROP TABLE IF EXISTS vendas;'); 
+
 }
 

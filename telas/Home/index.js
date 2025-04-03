@@ -6,7 +6,6 @@ import { Audio } from 'expo-av';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import DatabaseService from '../../Database/DatabaseService';
 
-// Variável global para controlar o estado da música
 let globalSound = null;
 let isMusicPlaying = false;
 
@@ -16,6 +15,7 @@ export default function Home() {
   const [musicState, setMusicState] = useState(false);
 
   useEffect(() => {
+      //DatabaseService.deleteTable();
       DatabaseService.init();
     }, []);
 
@@ -42,7 +42,6 @@ export default function Home() {
     }
   ];
 
-  // Carrega e toca a música apenas na primeira vez
   const loadBackgroundMusic = async () => {
     if (globalSound) return;
 
@@ -66,7 +65,6 @@ export default function Home() {
     }
   };
 
-  // Controla play/pause da música
   const toggleMusic = async () => {
     if (!globalSound) {
       await loadBackgroundMusic();
@@ -83,18 +81,15 @@ export default function Home() {
     setMusicState(isMusicPlaying);
   };
 
-  // Efeito para carregar a música apenas na primeira montagem
   useEffect(() => {
     if (isFocused) {
-      //loadBackgroundMusic();
+      loadBackgroundMusic();
     }
 
     return () => {
-      // Não descarregamos o som aqui para manter entre navegações
     };
   }, [isFocused]);
 
-  // Limpeza quando o componente é desmontado (app fechado)
   useEffect(() => {
     return () => {
       if (globalSound) {
