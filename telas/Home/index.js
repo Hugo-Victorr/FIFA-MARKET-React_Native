@@ -53,7 +53,7 @@ export default function Home() {
       });
 
       const { sound } = await Audio.Sound.createAsync(
-        require('../../assets/sounds/Love_me_again.mp3'),
+        require('../../assets/sounds/bomba-patch.mp3'),
         { shouldPlay: true, isLooping: true }
       );
 
