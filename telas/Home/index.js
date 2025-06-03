@@ -16,7 +16,7 @@ export default function Home() {
 
   useEffect(() => {
       //DatabaseService.deleteTable();
-      DatabaseService.init();
+      // DatabaseService.init();
     }, []);
 
   const menuItems = [

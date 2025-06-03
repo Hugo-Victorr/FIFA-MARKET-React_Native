@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { View, ScrollView, StyleSheet, Alert, ImageBackground } from 'react-native';
 import { TextInput, Button, Title } from 'react-native-paper';
-import PosicaoService from '../../Database/PosicaoService';
+// import PosicaoService from '../../Database/PosicaoService';
+import PosicaoApiService from '../../API/PosicaoApiService';
 
 export default function CadPosicao({ route, navigation }) {
   const editar = route.params?.editar || false;
@@ -24,7 +25,8 @@ export default function CadPosicao({ route, navigation }) {
 
   useEffect(() => {
     const carregar = async () => {
-      await PosicaoService.getAll(); 
+      // await PosicaoService.getAll(); 
+      await PosicaoApiService.getAll();
     };
     carregar();
   }, []);
@@ -37,20 +39,23 @@ export default function CadPosicao({ route, navigation }) {
 
   const handleSalvar = async () => {
     const posicao = {
-      id: posicaoEdicao?.id,
+      id: posicaoEdicao?._id,
       nome,
     };
 
     try {
       if (editar) {
-        await PosicaoService.update(posicao);
+        // await PosicaoService.update(posicao);
+        await PosicaoApiService.update(posicao);
         Alert.alert('Sucesso', 'Posição atualizada com sucesso!', [
           { text: 'OK', onPress: () => navigation.navigate('ListaPosicao') }
         ]);
       } else {
-        await PosicaoService.insert(posicao.nome);
+        // await PosicaoService.insert(posicao.nome);
+        console.log('Salvando nova posição:', posicao.nome); 
+        await PosicaoApiService.insert(posicao.nome);
         Alert.alert('Sucesso', 'Posição cadastrada com sucesso!', [
-          { text: 'OK', onPress: () => navigation.navigate('ListaPosicao') }
+          { text: 'OK', onPress: () => navigation.navigate('ListaPosicao') } 
         ]);
       }
     } catch (error) {

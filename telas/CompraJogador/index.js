@@ -3,10 +3,14 @@ import { ScrollView, StyleSheet, Alert, View, ImageBackground } from 'react-nati
 import { Card, Text, Button, Title, TextInput } from 'react-native-paper';
 import DropDownPicker from 'react-native-dropdown-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import JogadorService from '../../Database/JogadorService';
-import PosicaoService from '../../Database/PosicaoService';
-import VendaService from '../../Database/VendaService';
-import VendaItemService from '../../Database/VendaItemService';
+// import JogadorService from '../../Database/JogadorService';
+import JogadorApiService from '../../API/JogadorApiService';
+// import PosicaoService from '../../Database/PosicaoService';
+import PosicaoApiService from '../../API/PosicaoApiService';
+// import VendaService from '../../Database/VendaService';
+import VendaApiService from '../../API/VendaApiService';
+// import VendaItemService from '../../Database/VendaItemService';
+import VendaItemApiService from '../../API/VendaItemApiService';
 import CountButton from '../../Componentes/CountButton'; 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import CarrinhoModal from '../../Componentes/CarrinhoModal';
@@ -53,18 +57,20 @@ export default function CompraJogador({ navigation }) {
   }, [filtroPosicao, jogadores]);
 
   const carregarPosicoes = async () => {
-    const lista = await PosicaoService.getAll();
-    const formatado = [{ label: 'TODAS AS POSIÇÕES', value: 'TODAS' }, ...lista.map(p => ({ label: p.nome.toUpperCase(), value: p.nome }))];
+    // const lista = await PosicaoService.getAll();
+    const lista = await PosicaoApiService.getAll();
+    const formatado = [
+      { label: 'TODAS AS POSIÇÕES', value: null },
+      ...lista.map(p => ({ label: p.nome.toUpperCase(), value: p.nome }))
+    ];
     setPosicoes(formatado);
   };
 
   const carregarJogadores = async () => {
-    try {
-      const lista = await JogadorService.getJogadores();
-      setJogadores(lista);
-    } catch (error) {
-      Alert.alert('Erro', 'Não foi possível carregar os jogadores');
-    }
+    // const lista = await JogadorService.getJogadores();
+    const lista = await JogadorApiService.getAll();
+    setJogadores(lista);
+    setFilteredJogadores(lista);
   };
 
   const handleQuantidadeChange = (id, value) => {
@@ -72,7 +78,7 @@ export default function CompraJogador({ navigation }) {
   };
 
   const handleComprar = async (jogador) => {
-    const quantidade = parseInt(quantidades[jogador.id] || '1');
+    const quantidade = parseInt(quantidades[jogador._id] || '1');
     if (quantidade < 1) {
       Alert.alert('Erro', 'Quantidade inválida.');
       return;
@@ -83,7 +89,7 @@ export default function CompraJogador({ navigation }) {
       const carrinho = carrinhoStr ? JSON.parse(carrinhoStr) : [];
   
       // Verifica se o item já está no carrinho
-      const itemExistente = carrinho.find(item => item.produto_id === jogador.id);
+      const itemExistente = carrinho.find(item => item.produto_id === jogador._id);
       
       if (itemExistente) {
         // Atualiza a quantidade se já existir
@@ -92,7 +98,7 @@ export default function CompraJogador({ navigation }) {
       } else {
         // Adiciona novo item
         carrinho.push({
-          produto_id: jogador.id,
+          produto_id: jogador._id,
           nome: jogador.nome,
           preco_unit: jogador.preco,
           quantidade,
@@ -124,13 +130,13 @@ export default function CompraJogador({ navigation }) {
       const forma_pagamento = 'Cartão';
 
       const venda = { data, total, forma_pagamento };
-      await VendaService.insert(venda);
+      await VendaApiService.insert(venda);
 
-      const vendas = await VendaService.getAll();
+      const vendas = await VendaApiService.getAll();
       const ultimaVenda = vendas[vendas.length - 1];
-      const venda_id = ultimaVenda.id;
+      const venda_id = ultimaVenda._id;
 
-      for (const item of carrinho) {
+      for (const item of carrinho) { 
         const itemVenda = {
           venda_id,
           produto_id: item.produto_id,
@@ -138,7 +144,7 @@ export default function CompraJogador({ navigation }) {
           preco_unit: item.preco_unit,
           subtotal: item.subtotal
         };
-        await VendaItemService.insert(itemVenda);
+        await VendaItemApiService.insert(itemVenda);
       } 
       
       Alert.alert('Compra Finalizada', 'Sua compra foi registrada com sucesso!', [
@@ -188,7 +194,7 @@ export default function CompraJogador({ navigation }) {
         />
 
         {filteredJogadores.map((jogador) => (
-          <Card key={jogador.id} style={styles.card}>
+          <Card key={jogador._id} style={styles.card}>
             <Card.Content>
               <Text style={styles.playerName}>{jogador.nome.toUpperCase()}</Text>
               <View style={styles.playerInfo}>
@@ -211,15 +217,15 @@ export default function CompraJogador({ navigation }) {
 
               <View style={styles.actions}>
               <CountButton
-  value={parseInt(quantidades[jogador.id] || 1)}
+  value={parseInt(quantidades[jogador._id] || 1)}
   onIncrease={() => {
-    const current = parseInt(quantidades[jogador.id] || 1);
-    handleQuantidadeChange(jogador.id, current + 1);
+    const current = parseInt(quantidades[jogador._id] || 1);
+    handleQuantidadeChange(jogador._id, current + 1);
   }}
   onDecrease={() => {
-    const current = parseInt(quantidades[jogador.id] || 1);
+    const current = parseInt(quantidades[jogador._id] || 1);
     if (current > 1) {
-      handleQuantidadeChange(jogador.id, current - 1);
+      handleQuantidadeChange(jogador._id, current - 1);
     }
   }}
   min={1}
@@ -240,7 +246,7 @@ export default function CompraJogador({ navigation }) {
 
         <Button 
           mode="contained" 
-          onPress={handleFinalizarCompra} 
+          onPress={handleFinalizarCompra}  
           style={styles.checkoutButton}
           labelStyle={styles.buttonText}
         >

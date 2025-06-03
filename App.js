@@ -12,6 +12,8 @@ import ListaPosicao from './telas/ListaPosicao';
 import CompraJogador from './telas/CompraJogador';
 import ListaVenda from './telas/ListaVenda';
 import GraficoVenda from './telas/GraficoVenda';
+import Login from './telas/Auth/Login';
+import Cadastro from './telas/Auth/Cadastro';
 
 const Stack = createNativeStackNavigator();
 
@@ -19,7 +21,9 @@ export default function App() {
   return ( 
     <PaperProvider>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="Home">
+        <Stack.Navigator initialRouteName="Login">
+          <Stack.Screen name="Login" component={Login} options={{ headerBackVisible: false, headerShown: false}} />
+          <Stack.Screen name="Cadastro" component={Cadastro} options={{ headerBackVisible: true, headerShown: false}} />
           <Stack.Screen name="Home" component={Home} options={{ headerBackVisible: false, headerShown: false}} />
           <Stack.Screen name="ListaJogador" component={ListaJogador} options={{ headerBackVisible: false, headerShown: false }} />
           <Stack.Screen name="ListaPosicao" component={ListaPosicao} options={{ headerBackVisible: false, headerShown: false }} />

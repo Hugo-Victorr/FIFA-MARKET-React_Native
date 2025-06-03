@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, Alert, View, ImageBackground } from 'react-native';
 import { Card, Text, Button, Title, FAB } from 'react-native-paper';
-import PosicaoService from '../../Database/PosicaoService';
+// import PosicaoService from '../../Database/PosicaoService';
+import PosicaoApiService from '../../API/PosicaoApiService';
 
 export default function ListaPosicao({ navigation }) {
   const [posicoes, setPosicoes] = useState([]);
@@ -12,7 +13,8 @@ export default function ListaPosicao({ navigation }) {
 
   const carregarPosicoes = async () => {
     try {
-      const lista = await PosicaoService.getAll();
+      // const lista = await PosicaoService.getAll();
+      const lista = await PosicaoApiService.getAll();
       setPosicoes(lista);
     } catch (error) {
       Alert.alert('Erro', 'Não foi possível carregar as posições');
@@ -25,8 +27,9 @@ export default function ListaPosicao({ navigation }) {
 
   const handleApagar = async (id) => {
     try {
-      await PosicaoService.deleteById(id);
-      Alert.alert('Sucesso', 'Posição deletada com sucesso!', [
+      // await PosicaoService.deleteById(id);
+      await PosicaoApiService.deleteById(_id);
+      Alert.alert('Sucesso', 'Posição deletada com sucesso!', [ 
         { text: 'OK' }
       ]);
       carregarPosicoes();
@@ -54,7 +57,7 @@ export default function ListaPosicao({ navigation }) {
           </Button>
 
           {posicoes.map((posicao) => (
-            <Card key={posicao.id} style={styles.card}>
+            <Card key={posicao._id} style={styles.card}>
               <Card.Content>
                 <Text style={styles.posicaoText}>POSIÇÃO: <Text style={styles.posicaoValue}>{posicao.nome.toUpperCase()}</Text></Text>
                 <View style={styles.buttonGroup}>
@@ -68,7 +71,7 @@ export default function ListaPosicao({ navigation }) {
                   </Button>
                   <Button 
                     mode="contained" 
-                    onPress={() => handleApagar(posicao.id)} 
+                    onPress={() => handleApagar(posicao._id)} 
                     style={[styles.button, styles.deleteButton]}
                     labelStyle={styles.buttonText}
                   >

@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { View, ScrollView, StyleSheet, Alert, ImageBackground } from 'react-native';
 import { TextInput, Button, Title, useTheme } from 'react-native-paper';
-import JogadorService from '../../Database/JogadorService';
-import PosicaoService from '../../Database/PosicaoService';
+// import JogadorService from '../../Database/JogadorService';
+import JogadorApiService from '../../API/JogadorApiService';
+// import PosicaoService from '../../Database/PosicaoService';
+import PosicaoApiService from '../../API/PosicaoApiService';
 import DropDownPicker from 'react-native-dropdown-picker';
 
 export default function CadJogador({ route, navigation }) {
@@ -40,8 +42,10 @@ export default function CadJogador({ route, navigation }) {
 
   useEffect(() => {
     const carregar = async () => {
-      await JogadorService.getJogadores(); 
-      const posicoes = await PosicaoService.getAll();
+      // await JogadorService.getJogadores(); 
+      await JogadorApiService.getAll();
+      // const posicoes = await PosicaoService.getAll();
+      const posicoes = await PosicaoApiService.getAll();
       const formatado = posicoes.map(p => ({ label: p.nome, value: p.nome }));
       setItems(formatado);
     };
@@ -65,7 +69,7 @@ export default function CadJogador({ route, navigation }) {
 
   const handleSalvar = async () => {
     const jogador = {
-      id: jogadorEdicao?.id, 
+      id: jogadorEdicao?._id, 
       nome,
       idade: parseInt(idade),
       posicao,
@@ -80,12 +84,14 @@ export default function CadJogador({ route, navigation }) {
 
     try {
       if (editar) {
-        await JogadorService.update(jogador);
+        // await JogadorService.update(jogador);
+        await JogadorApiService.update(jogador);
         Alert.alert('Sucesso', 'Jogador atualizado com sucesso!', [
           { text: 'OK', onPress: () => navigation.navigate('ListaJogador') }
         ]);
       } else {
-        await JogadorService.insert(jogador);
+        // await JogadorService.insert(jogador);
+        await JogadorApiService.insert(jogador);
         Alert.alert('Sucesso', 'Jogador cadastrado com sucesso!', [
           { text: 'OK', onPress: () => navigation.navigate('ListaJogador') }
         ]);

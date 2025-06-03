@@ -34,7 +34,6 @@ const VendaItemService = {
 
   
 async function insert(item) {
-  // const db = await SQLite.openDatabaseAsync('N2_AlbumJogadores');
   const db = await DatabaseService.getDatabase(); 
     await db.runAsync(
       `INSERT INTO venda_itens (venda_id, produto_id, quantidade, preco_unit, subtotal) VALUES (?, ?, ?, ?, ?);`,

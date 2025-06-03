@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, Alert, View, ImageBackground } from 'react-native';
 import { Card, Text, Button, Title, FAB, Badge } from 'react-native-paper';
 import DropDownPicker from 'react-native-dropdown-picker';
-import VendaService from '../../Database/VendaService';
-import VendaItemService from '../../Database/VendaItemService';
-import JogadorService from '../../Database/JogadorService';
-import PosicaoService from '../../Database/PosicaoService';
+import VendaApiService from '../../API/VendaApiService';
+import VendaItemApiService from '../../API/VendaItemApiService';
+import JogadorApiService from '../../API/JogadorApiService';
+import PosicaoApiService from '../../API/PosicaoApiService';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 export default function ListaVenda({ navigation }) {
@@ -18,7 +18,8 @@ export default function ListaVenda({ navigation }) {
     const carregar = async () => {
       //await VendaService.deleteTable();
       //await VendaItemService.deleteTable();
-      const listaPosicoes = await PosicaoService.getAll();
+      // const listaPosicoes = await PosicaoService.getAll();
+      const listaPosicoes = await PosicaoApiService.getAll();
       const formatado = [
         { label: 'TODAS AS POSIÇÕES', value: null }, 
         ...listaPosicoes.map(p => ({ label: p.nome.toUpperCase(), value: p.nome }))
@@ -35,14 +36,16 @@ export default function ListaVenda({ navigation }) {
 
   const carregarVendas = async () => {
     try {
-      const listaVendas = await VendaService.getAll();
+      // const listaVendas = await VendaService.getAll(); 
+      const listaVendas = await VendaApiService.getAll(); 
       const vendasComItens = [];
 
       for (const venda of listaVendas) {
-        const itens = await VendaItemService.getItensDaVenda(venda.id);
+        let itens = await VendaItemApiService.getItensDaVenda(venda._id);
+        if (!Array.isArray(itens)) itens = [];
         const itensDetalhados = await Promise.all(
           itens.map(async item => {
-            const jogador = await JogadorService.getJogadorById(item.produto_id);
+            const jogador = await JogadorApiService.getById(item.produto_id);
             return {
               ...item,
               nome: jogador?.nome,
@@ -96,7 +99,7 @@ export default function ListaVenda({ navigation }) {
         />
 
         {vendas.map(venda => (
-          <Card key={venda.id} style={styles.card}>
+          <Card key={venda._id} style={styles.card}>
             <Card.Content>
               <View style={styles.vendaHeader}>
                 <View>
