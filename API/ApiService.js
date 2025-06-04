@@ -16,10 +16,10 @@ const ApiService = {
   setRefreshToken(token) {
     authRefreshToken = token;  
   },
-  // clearToken() {
-  //   authToken = null;
-  //   currentUser = null; 
-  // },
+  clearToken() {
+    authToken = null;
+    currentUser = null; 
+  },
   setUser(user) {
     currentUser = user; 
   },

@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, ImageBackground, TouchableOpacity } from 'react-native';
-import { Text, Title } from 'react-native-paper';
+import { View, StyleSheet, ImageBackground, TouchableOpacity, Modal } from 'react-native';
+import { Text, Title, Button, Portal, Dialog } from 'react-native-paper';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
 import { Audio } from 'expo-av';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import DatabaseService from '../../Database/DatabaseService';
+import ApiService from '../../API/ApiService';
+import AuthApiService from '../../API/AuthApiService';
 
 let globalSound = null;
 let isMusicPlaying = false;
@@ -13,6 +15,8 @@ export default function Home() {
   const navigation = useNavigation();
   const isFocused = useIsFocused();
   const [musicState, setMusicState] = useState(false);
+  const [userDialogVisible, setUserDialogVisible] = useState(false);
+  const currentUser = ApiService.getUser();
 
   useEffect(() => {
       //DatabaseService.deleteTable();
@@ -100,14 +104,30 @@ export default function Home() {
     };
   }, []);
 
+  const handleLogout = () => {
+    AuthApiService.logout();
+    navigation.replace('Login');
+  };
+
   return (
     <ImageBackground 
       source={require('../../assets/fifa-background.jpg')}
       style={styles.backgroundImage}
     >
       <View style={styles.container}>
+        <TouchableOpacity 
+          style={styles.userButton}
+          onPress={() => setUserDialogVisible(true)}
+        >
+          <Icon 
+            name="account-circle" 
+            size={24} 
+            color="#FFFFFF" 
+          />
+        </TouchableOpacity>
+
         <View style={styles.spacer} />
-        <Title style={styles.title}>ULTIMATE TEAM™</Title>
+        <Title style={styles.title}>FIFA MARKET™</Title>
         
         <View style={styles.menuGrid}>
           {menuItems.map((item, index) => (
@@ -139,6 +159,38 @@ export default function Home() {
             color="#FFFFFF" 
           />
         </TouchableOpacity>
+
+        <Portal>
+          <Dialog
+            visible={userDialogVisible}
+            onDismiss={() => setUserDialogVisible(false)}
+            style={styles.dialog}
+          >
+            <Dialog.Title style={styles.dialogTitle}>Perfil do Usuário</Dialog.Title>
+            <Dialog.Content>
+              <View style={styles.userInfo}>
+                <Icon name="account" size={50} color="#0096FF" style={styles.userIcon} />
+                <Text style={styles.userInfoText}>Nome: {currentUser?.name}</Text>
+                <Text style={styles.userInfoText}>Email: {currentUser?.email}</Text>
+              </View>
+            </Dialog.Content>
+            <Dialog.Actions>
+              <Button 
+                onPress={handleLogout}
+                textColor="#FF4444"
+                style={styles.logoutButton}
+              >
+                Sair
+              </Button>
+              <Button 
+                onPress={() => setUserDialogVisible(false)}
+                textColor="#0096FF"
+              >
+                Fechar
+              </Button>
+            </Dialog.Actions>
+          </Dialog>
+        </Portal>
       </View>
     </ImageBackground>
   );
@@ -211,8 +263,7 @@ const styles = StyleSheet.create({
     textShadowOffset: { width: 1, height: 1 },
     textShadowRadius: 2,
     letterSpacing: 0.5,
-  },
-  musicButton: {
+  },  musicButton: {
     position: 'absolute',
     right: 20,
     bottom: 20,
@@ -227,5 +278,49 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 3,
     elevation: 5,
+  },
+  userButton: {
+    position: 'absolute',
+    right: 20,
+    top: 80,
+    backgroundColor: 'rgba(0, 150, 255, 0.7)',
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 3,
+    elevation: 5,
+    zIndex: 1,
+  },
+  dialog: {
+    backgroundColor: 'rgba(10, 31, 58, 0.95)',
+    borderWidth: 2,
+    borderColor: '#0096FF',
+    borderRadius: 16,
+  },
+  dialogTitle: {
+    color: '#FFFFFF',
+    textAlign: 'center',
+    fontSize: 24,
+    fontWeight: 'bold',
+  },
+  userInfo: {
+    alignItems: 'center',
+    padding: 20,
+  },
+  userIcon: {
+    marginBottom: 20,
+  },
+  userInfoText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    marginBottom: 10,
+  },
+  logoutButton: {
+    marginRight: 8,
   },
 });

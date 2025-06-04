@@ -32,9 +32,9 @@ const AuthApiService = {
     return ApiService.post(resource +'/register', { name, email, password, confirmpassword });
   },
 
-  // logout() {
-  //   ApiService.clearToken();
-  // },
+  logout() {
+    ApiService.clearToken();
+  },
 };
 
 export default AuthApiService;
