@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { View, ScrollView, StyleSheet, Alert, ImageBackground } from 'react-native';
 import { Card, Text, Button, Title, FAB } from 'react-native-paper';
-import JogadorService from '../../Database/JogadorService';
+// import JogadorService from '../../Database/JogadorService';
+import JogadorApiService from '../../API/JogadorApiService';
 
 export default function ListaJogador({ navigation }) {
   const [jogadores, setJogadores] = useState([]);
@@ -12,7 +13,8 @@ export default function ListaJogador({ navigation }) {
 
   const carregarJogadores = async () => {
     try {
-      const lista = await JogadorService.getJogadores();
+      // const lista = await JogadorService.getJogadores();
+      const lista = await JogadorApiService.getAll();
       setJogadores(lista);
     } catch (error) {
       Alert.alert('Erro', 'Não foi possível carregar os jogadores');
@@ -25,7 +27,8 @@ export default function ListaJogador({ navigation }) {
 
   const handleApagar = async (id) => {
     try {
-      await JogadorService.deleteJogadorById(id);
+      // await JogadorService.deleteJogadorById(id);
+      await JogadorApiService.deleteById(id);
       Alert.alert('Sucesso', 'Jogador deletado com sucesso!', [
         { text: 'OK' }
       ]);
@@ -54,7 +57,7 @@ export default function ListaJogador({ navigation }) {
           </Button>
 
           {jogadores.map((jogador) => (
-            <Card key={jogador.id} style={styles.card}>
+            <Card key={jogador._id} style={styles.card}>
               <Card.Content>
                 <Text style={styles.cardTextTitle}>{jogador.nome.toUpperCase()}</Text>
                 <View style={styles.statsContainer}>
@@ -88,7 +91,7 @@ export default function ListaJogador({ navigation }) {
                   </Button>
                   <Button 
                     mode="contained" 
-                    onPress={() => handleApagar(jogador.id)} 
+                    onPress={() => handleApagar(jogador._id)} 
                     style={[styles.button, styles.deleteButton]}
                     labelStyle={styles.buttonText}
                   >

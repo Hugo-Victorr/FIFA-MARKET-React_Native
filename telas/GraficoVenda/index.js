@@ -3,9 +3,12 @@ import { ScrollView, StyleSheet, View, Alert, ImageBackground } from 'react-nati
 import { Card, Text, Title, Button } from 'react-native-paper';
 import { PieChart, BarChart } from 'react-native-chart-kit'; 
 import { Dimensions } from 'react-native';
-import VendaService from '../../Database/VendaService';
-import VendaItemService from '../../Database/VendaItemService';
-import JogadorService from '../../Database/JogadorService';
+// import VendaService from '../../Database/VendaService';
+import VendaApiService from '../../API/VendaApiService';
+// import VendaItemService from '../../Database/VendaItemService';
+import VendaItemApiService from '../../API/VendaItemApiService';
+// import JogadorService from '../../Database/JogadorService';
+import JogadorApiService from '../../API/JogadorApiService';
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -19,14 +22,16 @@ export default function GraficoVenda({ navigation }) {
 
   const carregarDados = async () => {
     try {
-      const itensVenda = await VendaItemService.getAll();
-      const jogadores = await JogadorService.getJogadores();
+      // const itensVenda = await VendaItemService.getAll();
+      const itensVenda = await VendaItemApiService.getAll();
+      // const jogadores = await JogadorService.getJogadores();
+      const jogadores = await JogadorApiService.getAll();
   
       const jogadorVendidoMap = {};
       const posicaoMap = {};
   
       itensVenda.forEach(item => {
-        const jogador = jogadores.find(j => j.id === item.produto_id);
+        const jogador = jogadores.find(j => j._id === item.produto_id);
         if (!jogador) return;
   
         if (!jogadorVendidoMap[jogador.nome]) {
