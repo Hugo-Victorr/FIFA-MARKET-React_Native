@@ -109,7 +109,7 @@ N2_mobile/
 
 ## 🤝 Integrações
 
-- Backend RESTful API 
+- Backend RESTful API NodeJs (FIFA Market API)
 - Sistema de autenticação
 - Banco de dados local
 - Sistema de áudio
