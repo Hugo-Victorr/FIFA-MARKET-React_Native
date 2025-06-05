@@ -3,7 +3,6 @@
 // Adapte os endpoints conforme necessário
 
 // const BASE_URL = 'http://localhost:3000'; // Altere para o endpoint real
-const BASE_URL = 'http://192.168.1.6:3000'; // Altere para o endpoint real
 
 let authToken = null;  
 let authRefreshToken = null;

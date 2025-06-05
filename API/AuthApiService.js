@@ -17,6 +17,7 @@ const AuthApiService = {
           ApiService.setUser(response.user); 
         }
         
+        
         return true;
       } else {
         console.error('Login falhou, token não recebido:', response);
@@ -28,8 +29,8 @@ const AuthApiService = {
     }
   },
 
-  async register({ name, email, password, confirmpassword }) {
-    return ApiService.post(resource +'/register', { name, email, password, confirmpassword });
+  async register({ name, email, age, password, confirmpassword }) {
+    return ApiService.post(resource +'/register', { name, email, age, password, confirmpassword });
   },
 
   logout() {

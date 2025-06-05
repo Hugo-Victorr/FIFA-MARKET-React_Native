@@ -39,7 +39,7 @@ export default function Cadastro({ navigation }) {
     }
     setLoading(true);
     try {
-      await AuthApiService.register({ name: nome, email, password: senha, confirmpassword: confirmarSenha });
+      await AuthApiService.register({ name: nome, email, age: idade, password: senha, confirmpassword: confirmarSenha });
       Alert.alert('Cadastro', 'Cadastro realizado com sucesso!', [
         { text: 'OK', onPress: () => navigation.replace('Login') }
       ]);
