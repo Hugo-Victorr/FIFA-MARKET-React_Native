@@ -1,10 +1,12 @@
-# Ultimate Team Mobile
+# FIFA Market Mobile
 
 Aplicativo mobile desenvolvido em React Native para gerenciamento de um sistema Ultimate Team, inspirado no FIFA Ultimate Team. Permite gerenciar jogadores, posições, compras e vendas com uma interface moderna e intuitiva.
 
-![alt text](image-1.png)
+![alt text](image.png) ![image](https://github.com/user-attachments/assets/c5b24c3d-da0f-47f7-9a3a-ffbcddb9da10)
 
-![alt text](image.png)
+![image](https://github.com/user-attachments/assets/9b9d2b05-7756-4fe2-b3f9-613b72151c97) ![image](https://github.com/user-attachments/assets/0083c09b-d215-4af4-865b-f63987c0a3d8)
+
+![image](https://github.com/user-attachments/assets/1355e34f-db4f-4fd8-8d5c-454a77cd41ba) ![image](https://github.com/user-attachments/assets/3fc691f0-d379-47e3-a009-00e91345f50c)
 
 ## 🚀 Tecnologias Utilizadas
 
@@ -97,68 +99,6 @@ N2_mobile/
 - Histórico de transações
 - Gráficos de vendas
 
-## 📦 Instalação
-
-```powershell
-# Clone o repositório
-git clone https://github.com/seu-usuario/ultimate-team-mobile.git
-
-# Entre no diretório
-cd ultimate-team-mobile
-
-# Instale as dependências
-npm install
-
-# Inicie o projeto
-expo start
-```
-
-## ⚙️ Configuração
-
-1. Configure o arquivo de ambiente:
-```javascript
-// API/ApiService.js
-const BASE_URL = 'seu-backend-url';
-```
-
-2. Instale o app Expo Go no seu dispositivo móvel
-
-3. Escaneie o QR Code gerado pelo Expo
-
-## 🔧 Requisitos
-
-- Node.js 14+
-- Expo CLI
-- Android Studio (para emulador Android)
-- XCode (para emulador iOS - apenas macOS)
-- Dispositivo móvel com Expo Go (para teste físico)
-
-## 📱 Build
-
-### Android
-```powershell
-expo build:android
-```
-
-### iOS
-```powershell
-expo build:ios
-```
-
-## 🎨 Personalização
-
-O aplicativo utiliza um tema personalizado que pode ser modificado em:
-```javascript
-// Exemplo de customização de tema
-const theme = {
-  colors: {
-    primary: '#0096FF',
-    accent: '#00B4FF',
-    background: 'rgba(10, 31, 58, 0.85)',
-  }
-};
-```
-
 ## 🔒 Segurança
 
 - Autenticação JWT
@@ -169,35 +109,11 @@ const theme = {
 
 ## 🤝 Integrações
 
-- Backend RESTful API
+- Backend RESTful API 
 - Sistema de autenticação
 - Banco de dados local
 - Sistema de áudio
 
-## 📈 Roadmap
-
-- [ ] Implementar modo offline
-- [ ] Adicionar notificações push
-- [ ] Implementar chat entre usuários
-- [ ] Adicionar animations mais elaboradas
-- [ ] Implementar sistema de achievements
-- [ ] Adicionar suporte a múltimos idiomas
-
 ## 📄 Licença
 
 Este projeto está sob a licença MIT - veja o arquivo [LICENSE.md](LICENSE.md) para detalhes
-
-## 👥 Contribuição
-
-1. Faça o fork do projeto
-2. Crie sua feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit suas mudanças (`git commit -m 'Add some AmazingFeature'`)
-4. Push para a branch (`git push origin feature/AmazingFeature`)
-5. Abra um Pull Request
-
-## ✨ Agradecimentos
-
-- [React Native](https://reactnative.dev/)
-- [Expo](https://expo.dev/)
-- [React Navigation](https://reactnavigation.org/)
-- [React Native Paper](https://callstack.github.io/react-native-paper/)
