@@ -17,6 +17,7 @@ export default function Home() {
   const [musicState, setMusicState] = useState(false);
   const [userDialogVisible, setUserDialogVisible] = useState(false);
   const currentUser = ApiService.getUser();
+  console.log('Usuário atual:', currentUser);
 
   useEffect(() => {
       //DatabaseService.deleteTable();
@@ -171,12 +172,13 @@ export default function Home() {
               <View style={styles.userInfo}>
                 <Icon name="account" size={50} color="#0096FF" style={styles.userIcon} />
                 <Text style={styles.userInfoText}>Nome: {currentUser?.name}</Text>
+                <Text style={styles.userInfoText}>Idade: {currentUser?.age}</Text>
                 <Text style={styles.userInfoText}>Email: {currentUser?.email}</Text>
               </View>
             </Dialog.Content>
             <Dialog.Actions>
               <Button 
-                onPress={handleLogout}
+                onPress={handleLogout} 
                 textColor="#FF4444"
                 style={styles.logoutButton}
               >
