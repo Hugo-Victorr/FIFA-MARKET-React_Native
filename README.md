@@ -2,6 +2,8 @@
 
 Aplicativo mobile desenvolvido em React Native para gerenciamento de um sistema Ultimate Team, inspirado no FIFA Ultimate Team. Permite gerenciar jogadores, posições, compras e vendas com uma interface moderna e intuitiva.
 
+Back-end: https://github.com/Hugo-Victorr/FIFA-MARKET-API_Nodejs
+
 ![alt text](image.png) ![image](https://github.com/user-attachments/assets/c5b24c3d-da0f-47f7-9a3a-ffbcddb9da10)
 
 ![image](https://github.com/user-attachments/assets/9b9d2b05-7756-4fe2-b3f9-613b72151c97) ![image](https://github.com/user-attachments/assets/0083c09b-d215-4af4-865b-f63987c0a3d8)
